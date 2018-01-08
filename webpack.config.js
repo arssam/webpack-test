@@ -41,8 +41,8 @@ module.exports = {
         },
         // loader 的可选项
       },
-      { 
-        test: /\.css$/, 
+      {
+        test: /\.css$/,
         include: resolve('src'),
         loader: ExtractTextPlugin.extract({
           fallback: "style-loader",
@@ -80,5 +80,9 @@ module.exports = {
       // filename: 'css/[name].[contenthash].css'
     }),
     new webpack.HotModuleReplacementPlugin(),
+    // 允许创建一个在编译时可以配置的全局常量
+    new webpack.DefinePlugin({
+      'process.env': 'dev'
+    }),
   ]
 };
