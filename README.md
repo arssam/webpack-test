@@ -2,7 +2,7 @@
 
 ## 项目启动：
 ```
-1. git clone 
+1. git clone https://github.com/arssam/webpack-test.git
 
 2. npm i
 
