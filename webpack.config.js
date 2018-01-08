@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); //通过 npm 安装
 const webpack = require('webpack'); //访问内置的插件
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function resolve (dir) {
   return path.resolve(__dirname, dir)
@@ -51,6 +52,7 @@ module.exports = {
       },
     ]
   },
+  // webpack 的 devtool 配置，决定了在构建过程中怎样生成 sourceMap 文件
   devtool: '#cheap-module-eval-source-map',
   plugins: [
     /**
@@ -84,5 +86,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': 'dev'
     }),
+    // webpack打包性能分析的插件
+    new BundleAnalyzerPlugin()
   ]
 };
