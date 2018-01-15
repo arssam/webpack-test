@@ -15,7 +15,8 @@ module.exports = {
    */
   target: 'web', // <=== 默认是 'web'，可省略
   entry: {
-    index: ['./dev-client', './src/index.js'] // string | object | array
+    // 'babel-polyfill' js编译为es3，兼容ie
+    index: ['babel-polyfill', './dev-client', './src/index.js'] // string | object | array
     // 这里应用程序开始执行
     // webpack 开始打包
   },
@@ -28,7 +29,9 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      '@': resolve('src')
+      '@': resolve('src'),
+      // 需要用到完成版vue的配置，即需要用到编译器
+      'vue': 'vue/dist/vue.esm.js'
     },
   },
   module: {
@@ -83,10 +86,27 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     // 允许创建一个在编译时可以配置的全局常量
+    // 打包部署时，设置编译环境为生产环境，去掉开发环境的编码，否则设置为NODE_ENV: JSON.stringify('dev')
     new webpack.DefinePlugin({
-      'process.env': 'dev'
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
     }),
     // webpack打包性能分析的插件
-    new BundleAnalyzerPlugin()
+    // new BundleAnalyzerPlugin()
+    // 防止打包重复，把公共的模块打包出来
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'common', // 指定公共 bundle 的名称。
+      minChunks: function (module) {
+        // any required modules inside node_modules are extracted to vendor
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
+        )
+      }
+    })
   ]
 };

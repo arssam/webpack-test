@@ -16,7 +16,7 @@ app.use(require('webpack-hot-middleware')(compiler, {
   heartbeat: 2000
 }));
 
-app.use('/src', express.static('src'));
+app.use(express.static(path.join(__dirname, 'src')));
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'src/index.html'));
